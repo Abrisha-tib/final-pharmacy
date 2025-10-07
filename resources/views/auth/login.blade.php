@@ -7,6 +7,12 @@
     
     <title>{{ config('app.name', 'Analog Pharmacy System') }} - Login</title>
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('analo.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('analo.png') }}">
+    <link rel="shortcut icon" href="{{ asset('analo.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('analo.png') }}">
+    
     <!-- Tailwind CSS - Modern utility-first CSS framework -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome - Optimized for performance -->

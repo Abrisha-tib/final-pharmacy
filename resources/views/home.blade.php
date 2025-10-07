@@ -7,6 +7,12 @@
     
     <title>{{ config('app.name', 'Pharmacy System') }} - Dashboard</title>
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('analo.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('analo.png') }}">
+    <link rel="shortcut icon" href="{{ asset('analo.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('analo.png') }}">
+    
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->

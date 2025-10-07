@@ -10,6 +10,12 @@
 
     <title>@yield('title', 'Analog Pharmacy Management System')</title>
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('analo.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('analo.png') }}">
+    <link rel="shortcut icon" href="{{ asset('analo.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('analo.png') }}">
+    
     <!-- Tailwind CSS - Modern utility-first CSS framework -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -728,7 +734,7 @@
                     <div class="relative">
                         <a href="{{ route('alerts') }}" class="relative p-3 text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-300 transition-all duration-200 group" aria-label="Notifications">
                             <i class="fas fa-bell text-xl group-hover:scale-110 transition-transform duration-200"></i>
-                            <span class="absolute -top-1 -right-1 bg-gradient-to-r from-red-500 to-red-600 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center shadow-lg animate-pulse" id="headerAlertCount">
+                            <span class="absolute -top-1 -right-1 bg-gradient-to-r from-red-500 to-red-600 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center shadow-lg" id="headerAlertCount">
                                 0
                             </span>
                         </a>
@@ -1118,12 +1124,19 @@
                     
                     if (headerAlertCount) {
                         headerAlertCount.textContent = alertCount;
-                        headerAlertCount.style.display = alertCount > 0 ? 'flex' : 'none';
+                        // Always show the badge, but hide the pulse animation when count is 0
+                        headerAlertCount.style.display = 'flex';
+                        if (alertCount > 0) {
+                            headerAlertCount.classList.add('animate-pulse');
+                        } else {
+                            headerAlertCount.classList.remove('animate-pulse');
+                        }
                     }
                     
                     if (sidebarAlertCount) {
                         sidebarAlertCount.textContent = alertCount;
-                        sidebarAlertCount.style.display = alertCount > 0 ? 'flex' : 'none';
+                        // Always show the badge
+                        sidebarAlertCount.style.display = 'flex';
                     }
                     
                     // Update system health based on REAL database alerts
@@ -1156,9 +1169,45 @@
             })
             .catch(error => {
                 console.error('Error fetching alert statistics:', error);
+                
+                // On error, ensure badges show 0 and are visible
+                const headerAlertCount = document.getElementById('headerAlertCount');
+                const sidebarAlertCount = document.getElementById('alertCount');
+                
+                if (headerAlertCount) {
+                    headerAlertCount.textContent = '0';
+                    headerAlertCount.style.display = 'flex';
+                    headerAlertCount.classList.remove('animate-pulse');
+                }
+                
+                if (sidebarAlertCount) {
+                    sidebarAlertCount.textContent = '0';
+                    sidebarAlertCount.style.display = 'flex';
+                }
             });
     }
 
+    // Initialize alert badges on page load
+    function initializeAlertBadges() {
+        const headerAlertCount = document.getElementById('headerAlertCount');
+        const sidebarAlertCount = document.getElementById('alertCount');
+        
+        // Ensure badges are visible and show 0 initially
+        if (headerAlertCount) {
+            headerAlertCount.textContent = '0';
+            headerAlertCount.style.display = 'flex';
+            headerAlertCount.classList.remove('animate-pulse');
+        }
+        
+        if (sidebarAlertCount) {
+            sidebarAlertCount.textContent = '0';
+            sidebarAlertCount.style.display = 'flex';
+        }
+    }
+    
+    // Initialize badges immediately
+    initializeAlertBadges();
+    
     // Update alert counts on page load
     updateAlertCounts();
 

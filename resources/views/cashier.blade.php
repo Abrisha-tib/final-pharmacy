@@ -3254,6 +3254,7 @@
                 <div class="text-center">
                     <div class="text-xs mb-1">ERCA FG10024710</div>
                     <div class="text-xs">Powered By Pharmacy System</div>
+                    <div class="text-xs">Analog Softwares Solutions</div>
                 </div>
             </div>
         `;
