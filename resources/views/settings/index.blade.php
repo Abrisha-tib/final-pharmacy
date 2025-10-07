@@ -118,39 +118,39 @@
                 </div>
             </div>
 
-            <!-- System Information -->
+            <!-- Printer Settings -->
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-lg transition-shadow duration-200">
                 <div class="p-6">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
                             <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
-                                <i class="fas fa-server text-blue-600 dark:text-blue-400 text-xl"></i>
+                                <i class="fas fa-print text-blue-600 dark:text-blue-400 text-xl"></i>
                             </div>
                         </div>
                         <div class="ml-4">
-                            <h3 class="text-lg font-medium text-gray-900 dark:text-white">System Information</h3>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">View system details and configuration</p>
+                            <h3 class="text-lg font-medium text-gray-900 dark:text-white">Printer Settings</h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Configure printers and printing options</p>
                         </div>
                     </div>
                     <div class="mt-4">
                         <div class="flex justify-between text-sm">
-                            <span class="text-gray-500 dark:text-gray-400">PHP Version</span>
-                            <span class="font-medium text-gray-900 dark:text-white">{{ PHP_VERSION }}</span>
+                            <span class="text-gray-500 dark:text-gray-400">Default Printer</span>
+                            <span class="font-medium text-gray-900 dark:text-white">{{ $stats['printer_stats']['default_printer'] ?? 'Not Set' }}</span>
                         </div>
                         <div class="flex justify-between text-sm mt-1">
-                            <span class="text-gray-500 dark:text-gray-400">Laravel Version</span>
-                            <span class="font-medium text-gray-900 dark:text-white">{{ app()->version() }}</span>
+                            <span class="text-gray-500 dark:text-gray-400">Total Printers</span>
+                            <span class="font-medium text-gray-900 dark:text-white">{{ $stats['printer_stats']['total_printers'] ?? 0 }}</span>
                         </div>
                         <div class="flex justify-between text-sm mt-1">
-                            <span class="text-gray-500 dark:text-gray-400">Memory Limit</span>
-                            <span class="font-medium text-gray-900 dark:text-white">{{ ini_get('memory_limit') }}</span>
+                            <span class="text-gray-500 dark:text-gray-400">Print Queue</span>
+                            <span class="font-medium text-gray-900 dark:text-white">{{ $stats['printer_stats']['queue_size'] ?? 0 }}</span>
                         </div>
                     </div>
                     <div class="mt-4">
-                        <button onclick="getSystemInfo()" 
+                        <button onclick="openPrinterModal()" 
                                 class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors duration-200">
-                            <i class="fas fa-info-circle mr-2"></i>
-                            View Details
+                            <i class="fas fa-cog mr-2"></i>
+                            Configure
                         </button>
                     </div>
                 </div>
@@ -223,7 +223,7 @@
                         </div>
                     </div>
                     <div class="mt-4">
-                        <button class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors duration-200">
+                        <button onclick="openSecurityModal()" class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors duration-200">
                             <i class="fas fa-cog mr-2"></i>
                             Configure
                         </button>
@@ -248,19 +248,19 @@
                     <div class="mt-4">
                         <div class="flex justify-between text-sm">
                             <span class="text-gray-500 dark:text-gray-400">Last Backup</span>
-                            <span class="font-medium text-gray-900 dark:text-white">Never</span>
+                            <span class="font-medium text-gray-900 dark:text-white">{{ $stats['backup_stats']['last_backup_date'] }}</span>
                         </div>
                         <div class="flex justify-between text-sm mt-1">
                             <span class="text-gray-500 dark:text-gray-400">Backup Size</span>
-                            <span class="font-medium text-gray-900 dark:text-white">N/A</span>
+                            <span class="font-medium text-gray-900 dark:text-white">{{ $stats['backup_stats']['last_backup_size'] }}</span>
                         </div>
                         <div class="flex justify-between text-sm mt-1">
-                            <span class="text-gray-500 dark:text-gray-400">Auto Backup</span>
-                            <span class="font-medium text-gray-500 dark:text-gray-400">Disabled</span>
+                            <span class="text-gray-500 dark:text-gray-400">Total Backups</span>
+                            <span class="font-medium text-gray-900 dark:text-white">{{ $stats['backup_stats']['total'] }}</span>
                         </div>
                     </div>
                     <div class="mt-4">
-                        <button class="inline-flex items-center px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white text-sm font-medium rounded-lg transition-colors duration-200">
+                        <button onclick="openBackupModal()" class="inline-flex items-center px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white text-sm font-medium rounded-lg transition-colors duration-200">
                             <i class="fas fa-download mr-2"></i>
                             Create Backup
                         </button>
@@ -285,19 +285,21 @@
                     <div class="mt-4">
                         <div class="flex justify-between text-sm">
                             <span class="text-gray-500 dark:text-gray-400">SMTP Status</span>
-                            <span class="font-medium text-gray-500 dark:text-gray-400">Not Configured</span>
+                            <span class="font-medium {{ $stats['email_stats']['pending'] > 0 ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400' }}">
+                                {{ $stats['email_stats']['pending'] > 0 ? 'Configured' : 'Not Configured' }}
+                            </span>
                         </div>
                         <div class="flex justify-between text-sm mt-1">
-                            <span class="text-gray-500 dark:text-gray-400">Notifications</span>
-                            <span class="font-medium text-gray-500 dark:text-gray-400">Disabled</span>
+                            <span class="text-gray-500 dark:text-gray-400">Pending Emails</span>
+                            <span class="font-medium text-gray-900 dark:text-white">{{ $stats['email_stats']['pending'] }}</span>
                         </div>
                         <div class="flex justify-between text-sm mt-1">
-                            <span class="text-gray-500 dark:text-gray-400">Email Queue</span>
-                            <span class="font-medium text-gray-500 dark:text-gray-400">0</span>
+                            <span class="text-gray-500 dark:text-gray-400">Failed Emails</span>
+                            <span class="font-medium text-gray-900 dark:text-white">{{ $stats['email_stats']['failed'] }}</span>
                         </div>
                     </div>
                     <div class="mt-4">
-                        <button class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors duration-200">
+                        <button onclick="openEmailModal()" class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors duration-200">
                             <i class="fas fa-cog mr-2"></i>
                             Configure
                         </button>
@@ -393,4 +395,10 @@ function closeSystemInfoModal() {
     document.getElementById('systemInfoModal').classList.add('hidden');
 }
 </script>
+
+<!-- Include Settings Modals -->
+@include('settings.security-modal')
+@include('settings.email-modal')
+@include('settings.backup-modal')
+@include('settings.printer-modal')
 @endsection

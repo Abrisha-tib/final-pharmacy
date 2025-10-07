@@ -406,11 +406,10 @@
 
     <div class="p-6 bg-gray-50 dark:bg-gray-900">
 
-        @if(true)
-            <!-- Cards View -->
-            <div id="cardView" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Sales cards rendered server-side for optimal performance -->
-                @if($salesData && $salesData->count() > 0)
+        <!-- Cards View -->
+        <div id="cardView" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Sales cards rendered server-side for optimal performance -->
+            @if($salesData && $salesData->count() > 0)
                     @foreach($salesData as $sale)
                         <div class="sales-card bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl border border-gray-200 dark:border-gray-700 p-6 transition-all duration-300">
                                 <!-- Header Section -->
@@ -509,11 +508,11 @@
                             <i class="fas fa-plus mr-2"></i>Create First Sale
                         </button>
                     </div>
-                @endif
-            </div>
+            @endif
+        </div>
             
-            <!-- Table View -->
-            <div id="tableView" class="hidden">
+        <!-- Table View -->
+        <div id="tableView" class="hidden">
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -618,7 +617,6 @@
                     </table>
                 </div>
             </div>
-        @endif
     </div>
 
     <!-- Pagination and Status -->

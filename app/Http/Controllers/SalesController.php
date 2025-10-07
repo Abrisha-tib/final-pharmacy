@@ -537,6 +537,7 @@ class SalesController extends Controller
         $cacheKey = 'sales_data_optimized_' . md5(serialize($request->all()));
         
         return Cache::remember($cacheKey, 300, function() use ($request) {
+            
             // Build optimized query - select only required columns
             $query = Sale::select([
                 'id', 'sale_number', 'customer_name', 'customer_phone', 

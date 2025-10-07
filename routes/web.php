@@ -579,6 +579,28 @@ Route::middleware(['auth', \Spatie\Permission\Middleware\PermissionMiddleware::c
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
     Route::post('/settings/clear-cache', [SettingsController::class, 'clearCache'])->name('settings.clear-cache');
     Route::get('/settings/system-info', [SettingsController::class, 'getSystemInfo'])->name('settings.system-info');
+    
+    // Security Settings
+    Route::get('/settings/security', [SettingsController::class, 'getSecuritySettings'])->name('settings.security');
+    Route::post('/settings/security', [SettingsController::class, 'updateSecuritySettings'])->name('settings.security.update');
+    
+    // Email Settings
+    Route::get('/settings/email', [SettingsController::class, 'getEmailSettings'])->name('settings.email');
+    Route::post('/settings/email', [SettingsController::class, 'updateEmailSettings'])->name('settings.email.update');
+    Route::post('/settings/email/test', [SettingsController::class, 'testEmailConfiguration'])->name('settings.email.test');
+    
+    // Backup & Restore
+    Route::get('/settings/backups', [SettingsController::class, 'getBackups'])->name('settings.backups');
+    Route::get('/settings/backups/stats', [SettingsController::class, 'getBackupStats'])->name('settings.backups.stats');
+    Route::post('/settings/backups', [SettingsController::class, 'createBackup'])->name('settings.backups.create');
+    Route::get('/settings/backups/{id}/download', [SettingsController::class, 'downloadBackup'])->name('settings.backups.download');
+    Route::delete('/settings/backups/{id}', [SettingsController::class, 'deleteBackup'])->name('settings.backups.delete');
+    
+    // Printer Settings
+    Route::get('/settings/printer', [SettingsController::class, 'getPrinterSettings'])->name('settings.printer');
+    Route::post('/settings/printer', [SettingsController::class, 'updatePrinterSettings'])->name('settings.printer.update');
+    Route::get('/settings/printer/available', [SettingsController::class, 'getAvailablePrinters'])->name('settings.printer.available');
+    Route::post('/settings/printer/test', [SettingsController::class, 'testPrinter'])->name('settings.printer.test');
 });
 
 // User Preferences Routes (protected with authentication)

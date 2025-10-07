@@ -68,8 +68,14 @@
                             <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 New Password (leave blank to keep current)
                             </label>
-                            <input type="password" name="password" id="password"
-                                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white @error('password') border-red-500 @enderror">
+                            <div class="relative">
+                                <input type="password" name="password" id="password"
+                                       class="w-full px-3 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white @error('password') border-red-500 @enderror">
+                                <button type="button" onclick="togglePassword('password')" 
+                                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                                    <i class="fas fa-eye" id="password-eye"></i>
+                                </button>
+                            </div>
                             @error('password')
                                 <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
@@ -80,8 +86,14 @@
                             <label for="password_confirmation" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Confirm New Password
                             </label>
-                            <input type="password" name="password_confirmation" id="password_confirmation"
-                                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+                            <div class="relative">
+                                <input type="password" name="password_confirmation" id="password_confirmation"
+                                       class="w-full px-3 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+                                <button type="button" onclick="togglePassword('password_confirmation')" 
+                                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                                    <i class="fas fa-eye" id="password_confirmation-eye"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -672,5 +684,21 @@ document.getElementById('editUserForm').addEventListener('submit', async functio
         submitBtn.disabled = false;
     }
 });
+
+// Password toggle functionality
+function togglePassword(fieldId) {
+    const passwordField = document.getElementById(fieldId);
+    const eyeIcon = document.getElementById(fieldId + '-eye');
+    
+    if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        eyeIcon.classList.remove('fa-eye');
+        eyeIcon.classList.add('fa-eye-slash');
+    } else {
+        passwordField.type = 'password';
+        eyeIcon.classList.remove('fa-eye-slash');
+        eyeIcon.classList.add('fa-eye');
+    }
+}
 </script>
 @endsection
