@@ -86,10 +86,11 @@ class UserPreferencesController extends Controller
                 'updated_at' => now()
             ];
 
-            // Store preferences in user's notes field (or create a separate preferences table)
-            $user->update([
-                'notes' => json_encode($preferences)
-            ]);
+            // Store preferences in user_preferences table
+            $user->preferences()->updateOrCreate(
+                ['user_id' => $user->id],
+                $preferences
+            );
 
             // Clear user-specific cache
             UserPreferencesService::clearCache($user);

@@ -639,7 +639,7 @@
                    aria-label="System Alerts">
                     <i class="fas fa-bell nav-icon w-5 h-5 mr-3"></i>
                     Alerts
-                    <span class="ml-auto bg-red-500 text-xs px-2 py-1 rounded-full" id="alertCount">0</span>
+                    <span class="ml-auto bg-red-500 text-xs px-2 py-1 rounded-full hidden" id="alertCount">0</span>
                 </a>
                 @endcan
 
@@ -661,7 +661,7 @@
                     <!-- User Management - view-users permission -->
                     @can('view-users')
                     <a href="{{ route('users.index') }}" 
-                       class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg hover:bg-green-500 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-green-400 {{ request()->routeIs('users*') ? 'active' : '' }}"
+                       class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg hover:bg-green-500 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-green-400 mt-3 {{ request()->routeIs('users*') ? 'active' : '' }}"
                        aria-label="User Management">
                         <i class="fas fa-users nav-icon w-5 h-5 mr-3"></i>
                         Users
@@ -734,7 +734,7 @@
                     <div class="relative">
                         <a href="{{ route('alerts') }}" class="relative p-3 text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-300 transition-all duration-200 group" aria-label="Notifications">
                             <i class="fas fa-bell text-xl group-hover:scale-110 transition-transform duration-200"></i>
-                            <span class="absolute -top-1 -right-1 bg-gradient-to-r from-red-500 to-red-600 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center shadow-lg" id="headerAlertCount">
+                            <span class="absolute -top-1 -right-1 bg-gradient-to-r from-red-500 to-red-600 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center shadow-lg hidden" id="headerAlertCount">
                                 0
                             </span>
                         </a>
@@ -1123,20 +1123,23 @@
                     const sidebarAlertCount = document.getElementById('alertCount');
                     
                     if (headerAlertCount) {
-                        headerAlertCount.textContent = alertCount;
-                        // Always show the badge, but hide the pulse animation when count is 0
-                        headerAlertCount.style.display = 'flex';
                         if (alertCount > 0) {
+                            headerAlertCount.textContent = alertCount;
+                            headerAlertCount.style.display = 'flex';
                             headerAlertCount.classList.add('animate-pulse');
                         } else {
+                            headerAlertCount.style.display = 'none';
                             headerAlertCount.classList.remove('animate-pulse');
                         }
                     }
                     
                     if (sidebarAlertCount) {
-                        sidebarAlertCount.textContent = alertCount;
-                        // Always show the badge
-                        sidebarAlertCount.style.display = 'flex';
+                        if (alertCount > 0) {
+                            sidebarAlertCount.textContent = alertCount;
+                            sidebarAlertCount.style.display = 'flex';
+                        } else {
+                            sidebarAlertCount.style.display = 'none';
+                        }
                     }
                     
                     // Update system health based on REAL database alerts
@@ -1170,19 +1173,17 @@
             .catch(error => {
                 console.error('Error fetching alert statistics:', error);
                 
-                // On error, ensure badges show 0 and are visible
+                // On error, hide badges
                 const headerAlertCount = document.getElementById('headerAlertCount');
                 const sidebarAlertCount = document.getElementById('alertCount');
                 
                 if (headerAlertCount) {
-                    headerAlertCount.textContent = '0';
-                    headerAlertCount.style.display = 'flex';
+                    headerAlertCount.style.display = 'none';
                     headerAlertCount.classList.remove('animate-pulse');
                 }
                 
                 if (sidebarAlertCount) {
-                    sidebarAlertCount.textContent = '0';
-                    sidebarAlertCount.style.display = 'flex';
+                    sidebarAlertCount.style.display = 'none';
                 }
             });
     }
@@ -1192,16 +1193,14 @@
         const headerAlertCount = document.getElementById('headerAlertCount');
         const sidebarAlertCount = document.getElementById('alertCount');
         
-        // Ensure badges are visible and show 0 initially
+        // Hide badges initially (will be shown if there are alerts)
         if (headerAlertCount) {
-            headerAlertCount.textContent = '0';
-            headerAlertCount.style.display = 'flex';
+            headerAlertCount.style.display = 'none';
             headerAlertCount.classList.remove('animate-pulse');
         }
         
         if (sidebarAlertCount) {
-            sidebarAlertCount.textContent = '0';
-            sidebarAlertCount.style.display = 'flex';
+            sidebarAlertCount.style.display = 'none';
         }
     }
     

@@ -34,11 +34,10 @@ class UserPreferencesService
         return Cache::remember($cacheKey, 300, function () use ($user) {
             $defaults = self::getDefaults();
             
-            if ($user->notes) {
-                $saved = json_decode($user->notes, true);
-                if (is_array($saved)) {
-                    return array_merge($defaults, $saved);
-                }
+            if ($user->preferences) {
+                $saved = $user->preferences->toArray();
+                unset($saved['id'], $saved['user_id'], $saved['created_at'], $saved['updated_at']);
+                return array_merge($defaults, $saved);
             }
             
             return $defaults;

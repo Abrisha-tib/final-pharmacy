@@ -109,7 +109,7 @@ class UserManagementController extends Controller
             'password' => 'required|string|min:8|confirmed',
             'phone' => 'nullable|string|max:20',
             'department' => 'nullable|string|max:100',
-            'new_department' => 'required_if:department,new|string|max:100',
+            'new_department' => 'required_if:department,new|nullable|string|max:100|sometimes',
             'notes' => 'nullable|string|max:1000',
             'status' => 'required|in:active,inactive,suspended',
             'roles' => 'array',
@@ -120,6 +120,14 @@ class UserManagementController extends Controller
         ]);
 
         if ($validator->fails()) {
+            if (request()->ajax() || request()->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation failed',
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+            
             return redirect()->back()
                 ->withErrors($validator)
                 ->withInput();
@@ -257,7 +265,7 @@ class UserManagementController extends Controller
             'password' => 'nullable|string|min:8|confirmed',
             'phone' => 'nullable|string|max:20',
             'department' => 'nullable|string|max:100',
-            'new_department' => 'required_if:department,new|string|max:100',
+            'new_department' => 'required_if:department,new|nullable|string|max:100|sometimes',
             'notes' => 'nullable|string|max:1000',
             'status' => 'required|in:active,inactive,suspended',
             'roles' => 'array',
@@ -272,6 +280,15 @@ class UserManagementController extends Controller
                 'errors' => $validator->errors()->toArray(),
                 'user_id' => $user->id
             ]);
+            
+            if (request()->ajax() || request()->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation failed',
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+            
             return redirect()->back()
                 ->withErrors($validator)
                 ->withInput();

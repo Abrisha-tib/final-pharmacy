@@ -24,7 +24,7 @@
     <!-- Form Section -->
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
-            <form id="createUserForm" class="p-6">
+            <form id="createUserForm" class="p-6" enctype="multipart/form-data">
                 @csrf
                 
                 <!-- Basic Information -->
@@ -588,6 +588,13 @@ document.getElementById('createUserForm').addEventListener('submit', async funct
     e.preventDefault();
     
     const formData = new FormData(this);
+    
+    // Remove new_department from formData if department is not 'new'
+    const departmentValue = formData.get('department');
+    if (departmentValue !== 'new') {
+        formData.delete('new_department');
+    }
+    
     const submitBtn = document.querySelector('button[type="submit"]');
     const originalText = submitBtn.innerHTML;
     

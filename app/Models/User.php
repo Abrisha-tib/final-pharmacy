@@ -83,7 +83,7 @@ class User extends Authenticatable
      */
     public function getAvatarUrlAttribute()
     {
-        if ($this->avatar) {
+        if ($this->avatar && Storage::disk('public')->exists($this->avatar)) {
             return Storage::disk('public')->url($this->avatar);
         }
         return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&color=059669&background=f0fdf4';
@@ -111,6 +111,14 @@ class User extends Authenticatable
     public function activities()
     {
         return $this->hasMany(UserActivity::class);
+    }
+
+    /**
+     * Get the user's preferences.
+     */
+    public function preferences()
+    {
+        return $this->hasOne(UserPreferences::class);
     }
 
     /**
